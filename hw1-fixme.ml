@@ -4,15 +4,9 @@
    student you worked with (both students MUST submit the solution to
    myCourses):
 
-   Name:
-   McGill ID:
-
-   If you worked in pairs, the name of the other student.
-
-   Name:
-   McGill ID:
-
-
+   Name:	Spiros Mavroidakos
+   McGill ID:	260689391
+   
  *)
 
 (* Notice: by submitting as part of team, you declare that you worked
@@ -32,9 +26,9 @@
 
 *)
 
-let inc int (k:int) = match n of
-  | 0 => (k:int)
-  | _ =>  k + (inc (n - 1)) + 1
+let inc int (k:int) = match n with
+  | 0 -> (k:int)
+  | _ ->  k + (inc (n - 1)) + 1
 
 (* Pupose: compute the nth element of the Fibonacci sequence:
 
@@ -50,6 +44,6 @@ let inc int (k:int) = match n of
 *)
 
 let rec fib (n : int) = match n with
-  0 -> 1.0
-  1 -> 1.0
-  n -> fib (n - 1) + fib (n - 2)
+ | 0 -> 1.0
+ | 1 -> 1.0
+ | n -> fib (n - 1) + fib (n - 2)
