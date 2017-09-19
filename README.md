@@ -1,2 +1,2 @@
 # Comp-302
-Repository with assignment for Mcgill Comp 302 Course
+Repository with assignment for Mcgill Course: Comp 302 
