@@ -4,20 +4,9 @@
    student you worked with (both students MUST submit the solution to
    myCourses):
 
-   Name:
-   McGill ID:
-
-   If you worked in pairs, the name of the other student.
-
-   Name:
-   McGill ID:
-
-
- *)
-
-(* Notice: by submitting as part of team, you declare that you worked
-   together on the solution. Submissions in pairs are allowed to
-   foster team work, they have to be developed by both students *)
+   Name:	Spiros Mavroidakos
+   McGill ID:	260689391
+*)
 
 (* Homework 1 - Questions 2 and 3 *)
 
@@ -59,13 +48,22 @@ type tr_kind
 
 (* Question 2.1 *)
 let well_formed_by_sides (a, b, c : tr_by_sides) : bool =
-  assert false                  (* write your solutions in place of all the "assert false" *)
+  if ((a +. b) > c) then true
+  	else if ((a +. c) > b) then true
+		else if ((b +. c) > a) then true
+			else 
+				false
 
 
 (* Question 2.2 *)
-let create_triangle (kind : tr_kind) (area : float) : tr_by_sides =
-  assert false
-
+let create_triangle (kind : tr_kind) (area : float) : tr_by_sides = match kind with 
+  	| Equilateral -> let (sides:side) = sqrt((4.0 *.area) /. 3.0) in 
+  			(sides,sides,sides) 
+  	| Isosceles -> let ab:float = sqrt(2.0 *. area) in
+  			let c:side = sqrt(2.0 *. ab) in
+			(ab, ab, c)
+  	| Scalene ->  (2.0,2.0,2.0)
+;;
 (* Question 2.3 *)
 type angle = float
 
