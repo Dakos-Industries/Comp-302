@@ -12,8 +12,17 @@ Errors:
 	3. Syntax Error at line 31
 	Same as 2.
 
-	4.Syntax Error at line 47, 48, 49
+	4. Syntax Error at line 47, 48, 49
 	with the Pattern matching statement, the | needs to seperate the comparisons.
 
-	5.Syntax  Error Unbound Value n at line 29
-	the value n is not bound to anything. It should be k instead. 
+	5. Syntax  Error Unbound Value n at line 29
+	the value n is not bound to anything. It should be k instead.n shoudl be replaced by k otherwise 
+	syntax errors will pop up if only the first instance of n was changed but the others were not. 
+
+	6. Syntax Error at line 29/31
+	The function should have rec as an identifier as it is recursively calling itself at line 31.
+
+	7. Syntax  Error at line 29
+	should be let rec inc (k:int)
+
+	8. 
