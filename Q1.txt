@@ -16,13 +16,13 @@ Errors:
 	with the Pattern matching statement, the | needs to seperate the comparisons.
 
 	5. Syntax  Error Unbound Value n at line 29
-	the value n is not bound to anything. It should be k instead.n shoudl be replaced by k otherwise 
-	syntax errors will pop up if only the first instance of n was changed but the others were not. 
+	The value n is not bound to anything since the function declaration has not bound it yet, 
+	in fact, n is missing. Should be as follow let inc(n,k)
 
-	6. Syntax Error at line 29/31
-	The function should have rec as an identifier as it is recursively calling itself at line 31.
+	6. Type Error at line 47, 48
+	Using floating point numbers instead of int.
 
-	7. Syntax  Error at line 29
-	should be let rec inc (k:int)
-
-	8. 
+	7.Syntax Error: line 31
+	At this point let us realize that this is recursively calling itself without having the rec keyword.
+	But, this implementation is clearly wrong since the purpose of the function is to increment n by k 
+	and we already have k so why complicate our life. Just rewrite as k+n to avoid headaches.

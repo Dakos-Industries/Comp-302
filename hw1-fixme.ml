@@ -26,9 +26,9 @@
 
 *)
 
-let rec inc (k:int) = match k with
+let inc(n,k) = match n with
   | 0 -> (k:int)
-  | _ ->  k + (inc (k - 1)) + 1
+  | _ ->  k  + n
 
 (* Pupose: compute the nth element of the Fibonacci sequence:
 
@@ -44,6 +44,6 @@ let rec inc (k:int) = match k with
 *)
 
 let rec fib (n : int) = match n with
- | 0 -> 1.0
- | 1 -> 1.0
+ | 0 -> 0
+ | 1 -> 1
  | n -> fib (n - 1) + fib (n - 2)
