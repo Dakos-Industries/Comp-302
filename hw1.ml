@@ -101,38 +101,50 @@ let even (n : int) : bool = n mod 2 = 0
 let evens_first (l : int list) : int list =
  let rec even_rec l acc_even acc_odd = match l with
 	| [] -> acc_even@acc_odd
-	| h::t -> if (even(h)) then even_rec t (h::acc_even) acc_odd
-			else even_rec t acc_even (h::acc_odd)
+	| h::t -> if (even(h)) then even_rec t (acc_even@[h]) acc_odd
+			else even_rec t acc_even (acc_odd@[h])
 	
 	in  
   even_rec l [] []
 ;;		 
-let ex_1 = evens_first [7 ; 5 ; 2; 4; 6; 3; 4; 2; 1]
+let ex_1 = evens_first [7 ; 5 ; 10; 12; 6; 3; 4; 2; 1]
 (* val ex_1 : int list = [2; 4; 6; 4; 2; 7; 5; 3; 1] *)
 
 (* Question 3.2 *)
 let even_streak (l : int list) : int =
-  assert false
+	let rec streak l acc_old acc_new = match l with
+	| [] -> if (acc_old > acc_new) then acc_old
+		else acc_new
+	| h::t -> if (even(h)) then streak t acc_old (acc_new + 1)
+		else if (acc_old > acc_new) then streak t acc_old 0
+			else streak t acc_new 0
+ in 
+ streak l 0 0
 
-let ex_2 = even_streak [7; 2; 4; 6; 3; 4; 2; 1]
+let ex_2 = even_streak [7; 2; 4; 6; 3; 4; 2; 1; 2; 2; 2; 2; 2]
 
 (* val ex_2 : int = 3 *)
-
 
 (* Question 3.3 *)
 
 type nucleobase = A | G | C | T
 
 let compress (l : nucleobase list) : (int * nucleobase) list =
-  assert false
-
+  let rec dna_magic l counter current nucleo_l = match l with
+  	|[] -> nucleo_l@[(counter, current)]
+	|h::t -> if (counter = 0) then dna_magic t 1 h nucleo_l
+		else if (current = h) then dna_magic t (counter + 1) current nucleo_l
+			else dna_magic t 1 h (nucleo_l@[(counter,current)])
+  in
+  dna_magic l 0 A []
+(*
 let rec decompress (l : (int * nucleobase) list) : nucleobase list =
   assert false
-
+*)
 let sample_dna : nucleobase list = [A;A;A;A;G;G;A;T;T;T;C;T;C]
 
 let ex_3 = compress sample_dna
 
-let ex_4 = decompress ex_3
+(*let ex_4 = decompress ex_3
 
-let res_3_4 = sample_dna = ex_4 (* This should be true if everything went well *)
+let res_3_4 = sample_dna = ex_4 (* This should be true if everything went well *)*)
