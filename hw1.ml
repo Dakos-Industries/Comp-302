@@ -137,14 +137,24 @@ let compress (l : nucleobase list) : (int * nucleobase) list =
 			else dna_magic t 1 h (nucleo_l@[(counter,current)])
   in
   dna_magic l 0 A []
-(*
+
 let rec decompress (l : (int * nucleobase) list) : nucleobase list =
-  assert false
-*)
+  let rec dna_helper l decomp_l = match l with
+  |[] -> decomp_l
+  |h::t -> match h with 
+  	   |s, k -> dna_helper t (decompress_printer s k decomp_l)
+ in
+	let rec decompress_printer counter nucleo decompress_l  = 
+	if (counter > 0) then decompress_printer (counter - 1) nucleo (decompress_l@[nucleo])
+	else decompress_l
+
+  in
+  dna_helper l []
+
 let sample_dna : nucleobase list = [A;A;A;A;G;G;A;T;T;T;C;T;C]
 
 let ex_3 = compress sample_dna
 
-(*let ex_4 = decompress ex_3
+let ex_4 = decompress ex_3
 
-let res_3_4 = sample_dna = ex_4 (* This should be true if everything went well *)*)
+let res_3_4 = sample_dna = ex_4 (* This should be true if everything went well *)
