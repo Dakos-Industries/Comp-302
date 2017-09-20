@@ -48,22 +48,26 @@ type tr_kind
 
 (* Question 2.1 *)
 let well_formed_by_sides (a, b, c : tr_by_sides) : bool =
-  if ((a +. b) > c) then true
-  	else if ((a +. c) > b) then true
-		else if ((b +. c) > a) then true
-			else 
-				false
+	if ((a +. b) > c) then
+  		if ((a +. c) > b) then
+				if ((b +. c) > a) then true
+					else false
+		else false		
+	else false
 
 
 (* Question 2.2 *)
 let create_triangle (kind : tr_kind) (area : float) : tr_by_sides = match kind with 
-  	| Equilateral -> let (sides:side) = sqrt((4.0 *.area) /. 3.0) in 
+  	| Equilateral -> let (sides:side) = sqrt((4.0 *.area) /. sqrt(3.0)) in 
   			(sides,sides,sides) 
   	| Isosceles -> let ab:float = sqrt(2.0 *. area) in
-  			let c:side = sqrt(2.0 *. ab) in
+  			let c:side = sqrt(2.0 *. ab *. ab) in
 			(ab, ab, c)
-  	| Scalene ->  (2.0,2.0,2.0)
-;;
+  	| Scalene ->  let c = area in 
+			let b = sqrt(4.0 +. (c *. c /.9.0)) and
+			    a = sqrt(4.0 +. (4.0 *. c *. c /. 9.0)) in
+			(a,b,c)
+
 (* Question 2.3 *)
 type angle = float
 
@@ -73,11 +77,14 @@ let well_formed_by_angle (a, b, gamma) : bool =
   (positive a && positive b && positive gamma) &&
     (not (is_multiple_of gamma pi))
 
-let sides_to_angle (a, b, c : tr_by_sides) : tr_by_angle option =
-  assert false
+let sides_to_angle (a, b, c : tr_by_sides) : tr_by_angle =
+	let gamma = acos((c *. c -. a *. a -. b *. b) /. (a *. b)) in
+	(a, b, gamma)
 
-let angle_to_sides (a, b, gamma) =
-  assert false
+let angle_to_sides (a, b, gamma) : tr_by_sides =
+	let c = a *. a +. b *. b -. 2.0 *. a *. b *. cos(gamma) in
+	(a, b, c)
+  
 
 (* Now that you implemented Q2.2 and saw the new representation of
    triangles by two sides and the angle between them, also ponder on
@@ -92,8 +99,14 @@ let even (n : int) : bool = n mod 2 = 0
 
 (* Question 3.1 *)
 let evens_first (l : int list) : int list =
-  assert false
-
+ let rec even_rec l acc_even acc_odd = match l with
+	| [] -> acc_even@acc_odd
+	| h::t -> if (even(h)) then even_rec t (h::acc_even) acc_odd
+			else even_rec t acc_even (h::acc_odd)
+	
+	in  
+  even_rec l [] []
+;;		 
 let ex_1 = evens_first [7 ; 5 ; 2; 4; 6; 3; 4; 2; 1]
 (* val ex_1 : int list = [2; 4; 6; 4; 2; 7; 5; 3; 1] *)
 
