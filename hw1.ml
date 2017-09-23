@@ -46,7 +46,11 @@ type tr_kind
   | Equilateral
   | Isosceles
 
-(* Question 2.1 *)
+(* Question 2.1 
+	The logic is simple, if one of the possible true values fails,
+	then false is returned. If they all pass then it is true as 
+	explained in the qestion.
+*)
 let well_formed_by_sides (a, b, c : tr_by_sides) : bool =
 	if ((a +. b) > c) then
   		if ((a +. c) > b) then
@@ -56,9 +60,31 @@ let well_formed_by_sides (a, b, c : tr_by_sides) : bool =
 	else false
 
 
-(* Question 2.2 *)
+(* Question 2.2 
+	Creates a triangle based on the area and type of triangle.
+	Cases:
+		1.Equilateral:
+			Basic formula to get the dimensions. Commonly known.
+		2. Isosceles:
+			ab is the length of the sides a and b since they are equal.
+			Since an Isosceles can be modeled as half of a square, ab 
+			can be viewed as the length of a side of the square. Knowing 
+			that the area is the lenght of a side^2 for a square, you can
+			multiply the area of the triangle by 2 and then sqrt it to get 
+			the length. Using pythagorean theorem, you can then find the length 
+			of the 3rd side c.
+		3. Scalene:
+			Asumptions: The base is always equal to the area and the height is
+			therefore always 2. 
+			Using these assumptions, if we partition the base so that it is
+			split anywhere that is not the middle, then the resulting triangle 
+			will be scalene. Here I choose to partition it at 1/3 of the length 
+			of the base. Using those assumptions, you can use pythagorean theorem
+			since you know 2 sides so you can find the 3rd.
+
+*)
 let create_triangle (kind : tr_kind) (area : float) : tr_by_sides = match kind with 
-  	| Equilateral -> let (sides:side) = sqrt((4.0 *.area) /. sqrt(3.0)) in 
+  	| Equilateral -> let (sides:side) = sqrt((4.0 *. area) /. sqrt(3.0)) in 
   			(sides,sides,sides) 
   	| Isosceles -> let ab:float = sqrt(2.0 *. area) in
   			let c:side = sqrt(2.0 *. ab *. ab) in
@@ -97,7 +123,13 @@ let angle_to_sides (a, b, gamma) : tr_by_sides =
 
 let even (n : int) : bool = n mod 2 = 0
 
-(* Question 3.1 *)
+(* Question 3.1 
+	Solution: Have a recursive function that takes in a list to be sorted and 2 
+	empty lists. One of the empty list will contain all the evens and the other 
+	will contain all the odds. If the value is even add it to the even list,
+	otherwise add it to the odd list. When the end of the list is reached, the 
+	lists are combined and returned.
+*)
 let evens_first (l : int list) : int list =
  let rec even_rec l acc_even acc_odd = match l with
 	| [] -> acc_even@acc_odd
@@ -110,7 +142,12 @@ let evens_first (l : int list) : int list =
 let ex_1 = evens_first [7 ; 5 ; 10; 12; 6; 3; 4; 2; 1]
 (* val ex_1 : int list = [2; 4; 6; 4; 2; 7; 5; 3; 1] *)
 
-(* Question 3.2 *)
+(* Question 3.2 
+	Solution:Input is the list, an int for the longest streak and an int for the 
+	current streak. Simply just increment the accumulators and reset the current 
+	streak if an odd appears but compare the current to the longest to possibly 
+	reassign the longest. Recursively call to go through the list.
+*)
 let even_streak (l : int list) : int =
 	let rec streak l acc_old acc_new = match l with
 	| [] -> if (acc_old > acc_new) then acc_old
@@ -138,16 +175,23 @@ let compress (l : nucleobase list) : (int * nucleobase) list =
   in
   dna_magic l 0 A []
 
-let rec decompress (l : (int * nucleobase) list) : nucleobase list =
-  let rec dna_helper l decomp_l = match l with
-  |[] -> decomp_l
-  |h::t -> match h with 
-  	   |s, k -> dna_helper t (decompress_printer s k decomp_l)
- in
-	let rec decompress_printer counter nucleo decompress_l  = 
+(*
+	Helper Method for decompress. Take in a counter which is the 
+	amount of times to print he nucleobase.
+	nucleo is the nucleobase to be added to the list that will
+	be returned.
+	decompress_l is the list of nucleobase with the nucleobase in 
+	it counter times.
+*)
+let rec decompress_printer counter nucleo decompress_l  = 
 	if (counter > 0) then decompress_printer (counter - 1) nucleo (decompress_l@[nucleo])
 	else decompress_l
 
+
+let rec decompress (l : (int * nucleobase) list) : nucleobase list =
+  let rec dna_helper l decomp_l = match l with
+  |[] -> decomp_l
+  |((s,k) as h)::t -> dna_helper t (decompress_printer s k decomp_l)
   in
   dna_helper l []
 
