@@ -103,13 +103,15 @@ let well_formed_by_angle (a, b, gamma) : bool =
   (positive a && positive b && positive gamma) &&
     (not (is_multiple_of gamma pi))
 
-let sides_to_angle (a, b, c : tr_by_sides) : tr_by_angle =
-	let gamma = acos((c *. c -. a *. a -. b *. b) /. (a *. b)) in
-	(a, b, gamma)
+let sides_to_angle (a, b, c : tr_by_sides) : tr_by_angle option =
+	match well_formed_by_sides (a,b,c) with
+	|false -> None
+	|true -> Some (a, b, acos((c *. c -. a *. a -. b *. b) /. (a *. b)));;
 
-let angle_to_sides (a, b, gamma) : tr_by_sides =
-	let c = a *. a +. b *. b -. 2.0 *. a *. b *. cos(gamma) in
-	(a, b, c)
+let angle_to_sides (a, b, gamma) : tr_by_sides option =
+	match well_formed_by_angle(a, b, gamma) with
+	| false -> None
+	| true -> Some (a, b, a *. a +. b *. b -. 2.0 *. a *. b *. cos(gamma));;
   
 
 (* Now that you implemented Q2.2 and saw the new representation of
