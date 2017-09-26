@@ -1,20 +1,20 @@
-(* student information:
+(* Student information:
 
-   enter your name, and if you chose to work in pairs, the name of the
+   Enter your name, and if you chose to work in pairs, the name of the
    student you worked with (both students must submit the solution to
    mycourses):
 
-   name:	Spiros Mavroidakos
-   mcgill id:	260689391
+   Name:	Spiros Mavroidakos
+   Mcgill id:	260689391
 *)
 
-(* homework 1 - questions 2 and 3 *)
+(* Homework 1 - questions 2 and 3 *)
 
-(* first, some utility functions and declarations that you can use. be
+(* First, some utility functions and declarations that you can use. be
    sure to check ocaml's documentation to find more functions
    available to you.
 
-   you can start checking the documentation at:
+   You can start checking the documentation at:
    https://caml.inria.fr/pub/docs/manual-ocaml/libref/pervasives.html
  *)
 
@@ -35,19 +35,19 @@ let is_multiple_of (a : float) (b : float) : bool =
 (* a function to check if a is between plus/minus b *)
 let abs_btwn a b = a < b && a > ~-.b
 
-(* question 2: triangles are the best *)
+(* Question 2: triangles are the best *)
 
 type side = float
 
 type tr_by_sides = side * side * side
 
 type tr_kind
-  = scalene
-  | equilateral
-  | isosceles
+  = Scalene
+  | Equilateral
+  | Isosceles
 
-(* question 2.1 
-	the logic is simple, if one of the possible true values fails,
+(* Question 2.1 
+	The logic is simple, if one of the possible true values fails,
 	then false is returned. if they all pass then it is true as 
 	explained in the qestion.
 *)
@@ -60,7 +60,7 @@ let well_formed_by_sides (a, b, c : tr_by_sides) : bool =
 	else false
 
 
-(* question 2.2 
+(* Question 2.2 
 	creates a triangle based on the area and type of triangle.
 	cases:
 		1.equilateral:
@@ -84,7 +84,7 @@ let well_formed_by_sides (a, b, c : tr_by_sides) : bool =
 
 *)
 let create_triangle (kind : tr_kind) (area : float) : tr_by_sides = match kind with 
-  	| equilateral -> let (sides:side) = sqrt((4.0 *. area) /. sqrt(3.0)) in 
+  	| Equilateral -> let (sides:side) = sqrt((4.0 *. area) /. sqrt(3.0)) in 
   			(sides,sides,sides) 
   	| Isosceles -> let ab:float = sqrt(2.0 *. area) in
   			let c:side = sqrt(2.0 *. ab *. ab) in
@@ -106,12 +106,12 @@ let well_formed_by_angle (a, b, gamma) : bool =
 let sides_to_angle (a, b, c : tr_by_sides) : tr_by_angle option =
 	match well_formed_by_sides (a,b,c) with
 	|false -> None
-	|true -> Some (a, b, acos((c *. c -. a *. a -. b *. b) /. (a *. b)));;
+	|true -> Some (a, b, acos((c *. c -. a *. a -. b *. b) /. (-2.0 *. a *. b)));;
 
 let angle_to_sides (a, b, gamma) : tr_by_sides option =
 	match well_formed_by_angle(a, b, gamma) with
 	| false -> None
-	| true -> Some (a, b, a *. a +. b *. b -. 2.0 *. a *. b *. cos(gamma));;
+	| true -> Some (a, b, sqrt(a *. a +. b *. b -. 2.0 *. a *. b *. cos(gamma)));;
   
 
 (* Now that you implemented Q2.2 and saw the new representation of
