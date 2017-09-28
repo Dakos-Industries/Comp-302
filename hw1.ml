@@ -141,7 +141,7 @@ let evens_first (l : int list) : int list =
 	in  
   	even_rec l [] [];;
 
-let ex_1 = evens_first [7 ; 5 ; 10; 12; 6; 3; 4; 2; 1]
+let ex_1 = evens_first [7 ; 5 ; 2; 4; 6; 3; 4; 2; 1]
 (* val ex_1 : int list = [2; 4; 6; 4; 2; 7; 5; 3; 1] *)
 
 (* Question 3.2 
@@ -160,7 +160,7 @@ let even_streak (l : int list) : int =
  	in 
  	streak l 0 0
 
-let ex_2 = even_streak [7; 2; 4; 6; 3; 4; 2; 1; 2; 2; 2; 2; 2]
+let ex_2 = even_streak [7; 2; 4; 6; 3; 4; 2; 1]
 
 (* val ex_2 : int = 3 *)
 
