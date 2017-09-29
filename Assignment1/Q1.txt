@@ -1,0 +1,28 @@
+Name:		Spiros Mavroidakos
+Mcgill Id:	260689391
+
+Errors:
+
+	1. Syntax Error at line 29
+	Pattern matching statement was wrong. SHould of used with instead of of.
+
+	2. Syntax Error at line 30
+	Arrow should be -> instead of =>
+
+	3. Syntax Error at line 31
+	Same as 2.
+
+	4. Syntax Error at line 47, 48, 49
+	with the Pattern matching statement, the | needs to seperate the comparisons.
+
+	5. Syntax  Error Unbound Value n at line 29
+	The value n is not bound to anything since the function declaration has not bound it yet, 
+	in fact, n is missing. Should be as follow let inc(n,k)
+
+	6. Type Error at line 47, 48
+	Using floating point numbers instead of int.
+
+	7.Syntax Error: line 31
+	At this point let us realize that this is recursively calling itself without having the rec keyword.
+	But, this implementation is clearly wrong since the purpose of the function is to increment n by k 
+	and we already have k so why complicate our life. Just rewrite as k+n to avoid headaches.
