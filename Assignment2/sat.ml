@@ -75,8 +75,18 @@ let rec negatives = function
 
   The returns the intersection of the elements of both lists. That is,
    those elements that are present in both lists at the same time. *)
-let rec intersection (l1 : 'a list) (l2 : 'a list) : 'a list = assert false
-
+let rec intersection (l1 : 'a list) (l2 : 'a list) : 'a list =
+  let rec isIntersection element l2' = match l2' with
+    | [] -> []
+    | h::t -> if (element = h) then [element]
+              else isIntersection element t
+  in
+  let rec getIntersectionList l1 l2 acc = match l1 with
+    | [] -> acc
+    | h::t -> getIntersectionList  t l2 (acc@(isIntersection h l2))
+  in
+  getIntersectionList l1 l2 [];;
+	  
 
 let rec cnf_tautology = function
   | And (p, q) -> cnf_tautology p && cnf_tautology q
