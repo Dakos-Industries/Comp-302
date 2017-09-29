@@ -1,3 +1,10 @@
+(* Comp 302 Assignment 2 SAT.ML file
+ * Summary: Implementation of an SAT Solver
+ *
+ * Name: Spiros Mavroidakos
+ * Student ID: 260689391
+ * 
+ *)
 
 (* The data-type for Propositional logic *)
 
@@ -74,7 +81,12 @@ let rec negatives = function
    list
 
   The returns the intersection of the elements of both lists. That is,
-   those elements that are present in both lists at the same time. *)
+   those elements that are present in both lists at the same time.
+   isIntersection: Recursive function that will compare a given elemnt to all
+   the contents of a given list. If the elemement matches an element of the 
+   given list, then it returns the element as a list
+
+   *)
 let rec intersection (l1 : 'a list) (l2 : 'a list) : 'a list =
   let rec isIntersection element l2' = match l2' with
     | [] -> []
