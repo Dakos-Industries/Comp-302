@@ -1,4 +1,4 @@
-(* Comp 302 Assignment 2 SAT.ML file
+(* Comp 302 Assignment 2 Sat.ml file
  * Summary: Implementation of an SAT Solver
  *
  * Name: Spiros Mavroidakos

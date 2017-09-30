@@ -1,3 +1,8 @@
+(* Name: Spiros Mavroidakos
+ * Student Id: 260689391
+ * Summary: Answers to Q1 of Assignment 2
+ *
+ * *)
 
 type prop = Atom of string
           | Not of prop
@@ -34,7 +39,8 @@ type nnf
    type forces the result to be in NNF. Your job is to not forget any
    sub-parts of the proposition in the conversion. *)
 let rec to_nnf : prop -> nnf = function
-  | _ -> assert false
+  | Atom a -> Atom a
+  | 
 
 
 (* Q1.3: Write a datatype cnf that represents only propositions in
