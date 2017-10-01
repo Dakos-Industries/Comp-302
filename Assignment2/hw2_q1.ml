@@ -41,15 +41,15 @@ let prop1 = Not (And (Atom "P", Not (Atom "P")));;
    type forces the result to be in NNF. Your job is to not forget any
    sub-parts of the proposition in the conversion.*) 
 let rec to_nnf : prop -> nnf = function
-  | AtomN a -> AtomN a 
-  | 
-  | Not (Not p) ->  AtomN( PosAtom p)
-  | Not (And (p, q)) -> (Or (Not p, Not q))
-  | Not (Or (p, q)) -> (And (Not p, Not q))
-  | And (p, q) -> And (p, q)
-  | Or (p, q) -> Or (p, q)
-
-(*let k = to_nnf prop1;;*)
+  | Atom a -> AtomN (PosAtom a) 
+  | Not (Atom a) -> AtomN (NegAtom a)
+  | Not (Not p) -> to_nnf p
+  | Not (And (p, q)) -> OrN ( to_nnf (Not p), to_nnf (Not q))
+  | Not (Or (p, q)) -> AndN ( to_nnf (Not p), to_nnf (Not q))
+  | And (p, q) -> AndN (to_nnf p, to_nnf q)
+  | Or (p, q) -> OrN (to_nnf p, to_nnf q)
+  
+let k = to_nnf prop1
  
 (*
 (* Q1.3: Write a datatype cnf that represents only propositions in
