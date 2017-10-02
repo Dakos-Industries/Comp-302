@@ -34,8 +34,6 @@ type nnf
   | OrN of nnf * nnf
   | AtomN of signed_atom
 
-let prop1 = Not (And (Atom "P", Not (Atom "P")));;
-
 (* Q1.2: Write the function nnf that converts propositions into NNF,
    notice that the typechecker will guide you in your answer as the
    type forces the result to be in NNF. Your job is to not forget any
@@ -48,17 +46,15 @@ let rec to_nnf : prop -> nnf = function
   | Not (Or (p, q)) -> AndN ( to_nnf (Not p), to_nnf (Not q))
   | And (p, q) -> AndN (to_nnf p, to_nnf q)
   | Or (p, q) -> OrN (to_nnf p, to_nnf q)
-  
-let k = to_nnf prop1
- 
-(*
+   
+
 (* Q1.3: Write a datatype cnf that represents only propositions in
    cnf. Hint: You might want to use more than one type to be able to
    represent sub-expressions.*)
 
 type cnf 
   =  
-
+(*
 (* Q1.4: Write the distribute and nnf_to_cnf functions using the new
    datatype. Hint: you may need more than one helper function. *)
 let rec distribute : cnf * cnf -> cnf = function
