@@ -52,14 +52,23 @@ let rec to_nnf : prop -> nnf = function
    cnf. Hint: You might want to use more than one type to be able to
    represent sub-expressions.*)
 
+type cnf_sub
+  = AtomC of signed_atom
+  | OrC of cnf_sub * cnf_sub
+
 type cnf 
-  =  
-(*
+  = SubCnf of cnf_sub
+  | AndC of cnf * cnf 
+
+
 (* Q1.4: Write the distribute and nnf_to_cnf functions using the new
    datatype. Hint: you may need more than one helper function. *)
 let rec distribute : cnf * cnf -> cnf = function
-  | _ -> assert false
+  (*| p, AndC (q, r) -> AndC(distribute (p, q), distribute (p, r))
+  | AndC(q, r), p ->  AndC(distribute (q, p), distribute (r, p))
+  *)| p, q -> OrC (SubCnf p, SubCnfq)
 
+(*
 let rec nnf_to_cnf : nnf -> cnf = function
   | _ -> assert false
 
