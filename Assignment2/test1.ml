@@ -28,11 +28,15 @@ let test3 test_ctxt = assert_equal true (Sat.taut taut2);;
  *)
 let taut1' = Hw2_q1.Not (Hw2_q1.And (Hw2_q1.Atom "P", Hw2_q1.Not (Hw2_q1.Atom "P")))
 
+let false2 = Hw2_q1.Not (Hw2_q1.And (Hw2_q1.Atom "P", Hw2_q1.Not (Hw2_q1.Atom "Q")))
+
 let sample = Hw2_q1.OrN(Hw2_q1.AtomN (Hw2_q1.NegAtom "P"), Hw2_q1.AtomN (Hw2_q1.PosAtom "P"))
 
 let simpleAtom = Hw2_q1.AtomN(Hw2_q1.PosAtom "A")
 
 let simpleAtomC = Hw2_q1.SubCnf (Hw2_q1.AtomC(Hw2_q1.PosAtom "A"))
+
+let falseone = Hw2_q1.SubCnf(Hw2_q1.OrC(Hw2_q1.AtomC(Hw2_q1.PosAtom "A"), Hw2_q1.AtomC(Hw2_q1.PosAtom "B")))
 
 let test4 test_ctxt = assert_equal true (sample = Hw2_q1.to_nnf(taut1'));;
 
@@ -42,6 +46,10 @@ let test6 test_ctxt = assert_equal true (Hw2_q1.cnf_tautology(Hw2_q1.to_cnf(taut
 
 let test7 test_ctxt = assert_equal true (simpleAtomC = Hw2_q1.to_cnf(Hw2_q1.Atom "A"))
 
+let test8 test_ctxt = assert_equal false (Hw2_q1.cnf_tautology(falseone))
+
+let test9 test_ctxt = assert_equal false (Hw2_q1.cnf_tautology (Hw2_q1.to_cnf(false2)));;
+
 let suite = "Suite">:::
 ["test1">:: test1;
  "test2">:: test2;
@@ -49,7 +57,9 @@ let suite = "Suite">:::
  "test4">:: test4;
  "test5">:: test5;
  "test6">:: test6;
- "test7">:: test7;];;
+ "test7">:: test7;
+ "test8">:: test8;
+ "test9">:: test9;];;
 
 let ()=
 run_test_tt_main suite;;
