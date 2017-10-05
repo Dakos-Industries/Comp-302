@@ -1,0 +1,95 @@
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Runner: processes
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Chooser: simple
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration suite_name = "Suite"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration cache_filename = "/home/pirros/Documents/GitRepos/Comp302/Assignments/Assignment2/oUnit-$(suite_name).cache"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration display = "true"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration results_style_1_X = "false"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration verbose = "false"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration health_check_interval = "1."
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration testdata_dir = "none"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration chooser = "simple"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration output_html_dir = "none"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration processes_kill_period = "5."
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration runner = "processes"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration shards = "1"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration processes_grace_period = "5."
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration log_encoding = "utf-8"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration output_junit_file = "none"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Configuration output_file = "/home/pirros/Documents/GitRepos/Comp302/Assignments/Assignment2/oUnit-$(suite_name)-$(shard_id).log"
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Using 1 workers maximum.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Starting worker number Pirros-Laptop#01.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Worker Pirros-Laptop#01 started.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:0:test1.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Start test Suite:0:test1.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:0:test1.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Test Suite:0:test1 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:0:test1.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: End test Suite:0:test1.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:0:test1.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:1:test2.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Start test Suite:1:test2.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:1:test2.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Test Suite:1:test2 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:1:test2.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: End test Suite:1:test2.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:1:test2.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:2:test3.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Start test Suite:2:test3.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:2:test3.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Test Suite:2:test3 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:2:test3.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: End test Suite:2:test3.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:2:test3.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:3:test4.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Start test Suite:3:test4.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:3:test4.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Test Suite:3:test4 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:3:test4.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: End test Suite:3:test4.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:3:test4.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:4:test5.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Start test Suite:4:test5.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:4:test5.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Test Suite:4:test5 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:4:test5.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: End test Suite:4:test5.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:4:test5.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:5:test6.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Start test Suite:5:test6.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:5:test6.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Test Suite:5:test6 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:5:test6.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: End test Suite:5:test6.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:5:test6.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Still 1 tests running : Suite:6:test7.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:6:test7.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Start test Suite:6:test7.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Still 1 tests running : Suite:6:test7.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:6:test7.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: Test Suite:6:test7 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Still 1 tests running : Suite:6:test7.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:6:test7.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#01 I: End test Suite:6:test7.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Still 1 tests running : Suite:6:test7.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 1 tests running: Suite:6:test7.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: 0 tests running: .
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Worker Pirros-Laptop#01 has ended.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Used 1 worker during test execution.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Run 7 tests with shard Pirros-Laptop#01.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: ==============
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Summary:
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Test Suite:6:test7 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Test Suite:5:test6 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Test Suite:4:test5 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Test Suite:3:test4 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Test Suite:2:test3 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Test Suite:1:test2 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Test Suite:0:test1 is successful.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Ran: 7 tests in: 0.11 seconds.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Cases: 7.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Tried: 7.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Errors: 0.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Failures: 0.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Skip: 0.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Todo: 0.
+2017-10-05T12:34:57+00:00 Pirros-Laptop#00 I: Timeout: 0.
