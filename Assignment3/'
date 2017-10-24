@@ -24,7 +24,7 @@ let rec unfold (f: 'seed -> ('a * 'seed)) (stop : 'b -> bool) (b : 'seed) : 'a l
 let nats max = unfold (fun b -> b, b + 1) (fun x -> x > max) 0
 
 (* Q1.1: Return the even numbers up-to max *)
-let evens max = unfold (fun x -> if (x = 0) then (x,x + 2) else (x, x + 2)) (fun s -> s >= max) 0;;
+let evens max = unfold (fun x -> if (x = 0) then (x,x + 2) else (x, x + 2)) (fun s -> s > max) 0;;
 
 
 (* Q1.2: Return the Fibonacci sequence up-to max *)
@@ -32,30 +32,19 @@ let binetPos = (1.0 +. sqrt(5.0)) /. 2.0;;
 let binetNeg = (1.0 -. sqrt (5.0)) /. 2.0;;
 let computeBinet x = int_of_float ((binetPos ** (float_of_int x) -. binetNeg ** (float_of_int x)) /. sqrt(5.0));;
 
-let fib max = unfold (fun x -> computeBinet x , x + 1) (fun s -> computeBinet s >= max) 1;;
+let fib max = unfold (fun x -> computeBinet x , x + 1) (fun s -> computeBinet s > max) 1;;
 
 (* Q1.3: Return the list of rows of the Pascal triangle that are shorter than max *)
 let rec fact x = 
   let rec compute y acc rollingTotal = 
     if (y = 0) then 1
     else
-      if (acc <= y) then compute y (acc + 1) (acc * rollingTotal)
-      else
-        rollingTotal
+      if (acc <= y) then compute y (acc * rollingTotal)
   in
-  compute x 1 1;;
+  compute x 0 0
+(*    
+let pascal max = assert false
 
-let binThm n k = (fact n) / (fact(n - k) * fact k);;
-
-let rec createRow x = 
-  let rec row n l acc = 
-    if (acc <= n) then row n (l@[binThm n acc]) (acc + 1)
-    else
-     l
-  in
-  row (x) [] 0;;
-
-let pascal max = unfold (fun x -> createRow x, x + 1) (fun s -> s > max) 0;;
 
 let rec zip (l1 : 'a list) (l2 : 'b list) :  ('a * 'b) list =
 match l1, l2 with
@@ -63,15 +52,9 @@ match l1, l2 with
 | _, [] -> []
 | x::xs, y::ys -> (x, y):: zip xs ys
 
-
 (* (Extra credit) Optional: implement zip with a single call to unfold *)
+let zip' l1 l2 = assert false
 
-
-let zip' l1 l2 = unfold (fun (x::y, h::t) -> (x,h),(y,t)) (fun (x,y) -> match x, y with 
-                                                                        | [], _ -> true 
-                                                                        | _, [] -> true 
-                                                                        | _, _ -> false) (l1,l2);; 
-(*
 (* Question 2 *)
 
 let ugly x =
