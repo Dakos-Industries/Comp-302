@@ -71,7 +71,7 @@ let zip' l1 l2 = unfold (fun (x::y, h::t) -> (x,h),(y,t)) (fun (x,y) -> match x,
                                                                         | [], _ -> true 
                                                                         | _, [] -> true 
                                                                         | _, _ -> false) (l1,l2);; 
-(*
+
 (* Question 2 *)
 
 let ugly x =
@@ -85,7 +85,14 @@ let ugly x =
 let memo_zero (f : 'a -> 'b) : 'a -> 'b = f
 
 (* Q2.1: Write a function that memoizes the last value called. *)
-let memo_one (f : 'a -> 'b) : ('a -> 'b) = assert false
+let memo_one (f : 'a -> 'b) : ('a -> 'b) = 
+  let input = ref None in
+  let output = ref None in
+  (fun x -> if (Some x = !input) then match !output with 
+                                        | Some y -> y
+            else (input := Some x ; output := Some (f x); f x)
+  )
+
 
 (* Example usage:
 
@@ -97,12 +104,44 @@ let u3 = ugly' 1                (* the stored value is for 3 so it calls ugly *)
 let u4 = ugly' 2                (* the stored value is for 1 so it calls ugly *)
 let u5 = ugly' 10               (* the stored value is for 2 so it calls ugly and takes a couple of seconds *)
 let u6 = ugly' 10               (* the one uses the stored value and returns immediately *)
+*)
+ 
 
- *)
 
-(* Q2.2: Write a function that memoizes the last value called. *)
-let memo_many (n : int) (f : 'a -> 'b) : 'a -> 'b = assert false
+(* Q2.2: Write a function that memoizes the last value called.  *)
+let rec find arr element =
+  let rec getIt arr element index =
+    if (arr.(index) = element) then index
+    else getIt arr element (index + 1)
+  in
+  getIt arr element 0
+;;
 
+let memo_many (n : int) (f : 'a -> 'b) : 'a -> 'b = 
+  let input = Array.make n None in
+  let output = Array.make n None in
+  let index = ref 0 in
+  (fun x -> if (List.exists(fun y -> (Some x) = y) (Array.to_list(input))) then match output.(find input (Some x)) with
+                                                                           |Some y -> y
+            else
+              if (!index = n) then (index := 0 ; Array.set input !index (Some x) ; Array.set output !index (Some (f x)) ; index := 1 ; f x)
+              else 
+                      (Array.set input !index (Some x) ; Array.set output !index (Some (f x)) ; index := !index + 1; Array.to_list(output) ;f x)
+  )
+;;
+(*
+let ugly' = memo_many 3 ugly
+
+let u1 = ugly' 3                (* this one calls ugly with 3 *)
+let u2 = ugly' 3                (* this one uses the stored value *)
+let u3 = ugly' 1                (* the stored value is for 3 so it calls ugly *)
+let u4 = ugly' 2                (* the stored value is for 1 so it calls ugly *)
+let u5 = ugly' 10               (* the stored value is for 2 so it calls ugly and takes a couple of seconds *)
+let u6 = ugly' 10               (* the one uses the stored value and returns immediately *)
+let u7 = ugly' 11
+*)
+
+(*
 (* Question 3: Doubly-linked circular lists  *)
 
 (* Circular doubly linked lists *)
