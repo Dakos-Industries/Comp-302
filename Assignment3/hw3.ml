@@ -33,7 +33,8 @@ let binetNeg = (1.0 -. sqrt (5.0)) /. 2.0;;
 let computeBinet x = int_of_float ((binetPos ** (float_of_int x) -. binetNeg ** (float_of_int x)) /. sqrt(5.0));;
 
 let fib max = unfold (fun x -> computeBinet x , x + 1) (fun s -> computeBinet s >= max) 1;;
-
+let fib' max = unfold (fun (x,y) -> if (x = 0) then (1),(y,1)
+                                               else (x + y), (y, x + y)) (fun (s,k) -> (s+k) >= max) (0,0)
 (* Q1.3: Return the list of rows of the Pascal triangle that are shorter than max *)
 let rec fact x = 
   let rec compute y acc rollingTotal = 
