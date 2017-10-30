@@ -123,13 +123,14 @@ let memo_many (n : int) (f : 'a -> 'b) : 'a -> 'b =
   let output = Array.make n None in
   let index = ref 0 in
   (fun x -> if (List.exists(fun y -> (Some x) = y) (Array.to_list(input))) then match output.(find input (Some x)) with
-                                                                           |Some y -> y
+                                                                           | Some y -> y
             else
               if (!index = n) then (index := 0 ; Array.set input !index (Some x) ; Array.set output !index (Some (f x)) ; index := 1 ; f x)
               else 
-                      (Array.set input !index (Some x) ; Array.set output !index (Some (f x)) ; index := !index + 1; Array.to_list(output) ;f x)
+                      (Array.set input !index (Some x) ; Array.set output !index (Some (f x)) ; index := !index + 1 ; f x)
   )
 ;;
+
 (*
 let ugly' = memo_many 3 ugly
 
@@ -142,7 +143,7 @@ let u6 = ugly' 10               (* the one uses the stored value and returns imm
 let u7 = ugly' 11
 *)
 
-(*
+
 (* Question 3: Doubly-linked circular lists  *)
 
 (* Circular doubly linked lists *)
@@ -172,11 +173,45 @@ let prev : 'a circlist -> 'a circlist = function
   | Some cl -> Some (cl.p)
 
 (* Q3.1: Write a function that add a new element at the beginning of a list *)
-let cons (x : 'a)  (xs : 'a circlist) : 'a circlist = assert false
+let cons (x : 'a)  (xs : 'a circlist) : 'a circlist = match xs with
+  | None -> let xs = singl x in xs 
+  | Some cl -> let addedCell = {p = cl.p; data = x; n = cl} 
+                in
+                (*cl.p.p <- addedCell; cl.p <- addedCell; Some cl*)
+                if (cl.n == cl) then (cl.n <- addedCell ; cl.p <- addedCell; Some cl)
+                else 
+                        (cl.p.n <- addedCell; cl.p <- addedCell; Some cl)
+                        (*match (prev xs) with 
+                | None -> None 
+                | Some pl -> (pl.n <- addedCell; cl.p <- addedCell ; Some cl)
+*)
+;;
+
 
 (* Q3.2: Write a function that computes the length of a list (Careful with the infinite loops)  *)
-let rec length (l : 'a circlist) : int = assert false
+let cons' (xs : 'a circlist) : 'a circlist = match xs with
+  | None -> None 
+  | Some cl -> let addedCell = {p = cl.p; data = cl.data; n = cl.n} 
+                in
+                if (cl.n == cl) then (cl.n <- addedCell ; cl.p <- addedCell; addedCell.n <- addedCell; Some cl)
+                else 
+                        (cl.p.n <- addedCell; cl.p <- addedCell; addedCell.n <- addedCell; Some cl)
+;;
 
+let rec length (l : 'a circlist) : int = 
+  let alist = l in
+  let copyList = cons' alist in
+  let rec getLength l2 acc = match l2 with 
+    | None -> 0
+    | Some cl -> if (cl == cl.n) then acc
+                   else getLength (next l2) (acc+1)
+  in
+  getLength copyList 0
+;;
+                          
+                
+
+(*
 (* Q3.3: Write a function that produces an immutable list from a circular list *)
 let to_list (l : 'a circlist)  : 'a list = assert false
 
