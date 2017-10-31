@@ -199,21 +199,27 @@ let cons' (xs : 'a circlist) : 'a circlist = match xs with
 ;;
 
 let rec length (l : 'a circlist) : int = 
-  let alist = l in
-  let copyList = cons' alist in
   let rec getLength l2 acc = match l2 with 
     | None -> 0
     | Some cl -> if (cl == cl.n) then acc
                    else getLength (next l2) (acc+1)
   in
-  getLength copyList 0
+  getLength (cons'l) 0
 ;;
                           
                 
 
-(*
+
 (* Q3.3: Write a function that produces an immutable list from a circular list *)
-let to_list (l : 'a circlist)  : 'a list = assert false
+let to_list (l : 'a circlist)  : 'a list = 
+  let rec listify cl1 ll = match cl1 with
+    | None -> []
+    | Some cl -> if (cl == cl.n) then  (cl.n.p <- cl.p; cl.p.n <- cl.n; ll)
+                 else listify (next cl1) (ll@[cl.data])
+  in
+  listify (cons' l) []
+;;
+
 
 (* Once you've written cons you can use this function to quickly populate your lists *)
 let rec from_list : 'a list -> 'a circlist = function
@@ -221,8 +227,21 @@ let rec from_list : 'a list -> 'a circlist = function
   | x::xs -> cons x (from_list xs)
 
 (* Q3.4: Write a function that reverses all the directions of the list *)
-let rev (l : 'a circlist) : 'a circlist = assert false
+let rev (l : 'a circlist) : 'a circlist = 
+   let t = to_list l in
+   from_list t
+;;
+ (*let rec reversal l n acc = match l with
+    | None -> None
+    | Some cl -> if (cl.n.n == cl.n.p && acc = 0) then (cl.p <- cl.n; cl.n.n <- cl; Printf.printf "Branch 1 ";reversal (next l) (n + 1) (acc + 2))
+                   else if ( acc >= 1 && acc < n) then (cl.n.n <- cl;Printf.printf "Branch 2 " ;reversal (prev l) n (acc + 1))
+                   else if ( acc = n) then (Some cl)
+                   else (cl.p <- cl.n ; Printf.printf "Branch 3 ";reversal (next l) (n + 1) acc)
+  in
+  reversal l 1 0
+;;*)
 
+(*
 (* (Extra credit) OPTIONAL: Write the map function as applied to lists *)
 let map (f : 'a -> 'b) : 'a circlist -> ' b circlist = assert false
 
