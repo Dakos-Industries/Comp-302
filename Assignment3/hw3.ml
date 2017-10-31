@@ -189,35 +189,23 @@ let cons (x : 'a)  (xs : 'a circlist) : 'a circlist = match xs with
 
 
 (* Q3.2: Write a function that computes the length of a list (Careful with the infinite loops)  *)
-let cons' (xs : 'a circlist) : 'a circlist = match xs with
-  | None -> None 
-  | Some cl -> let addedCell = {p = cl.p; data = cl.data; n = cl.n} 
-                in
-                if (cl.n == cl) then (cl.n <- addedCell ; cl.p <- addedCell; addedCell.n <- addedCell; Some cl)
-                else 
-                        (cl.p.n <- addedCell; cl.p <- addedCell; addedCell.n <- addedCell; Some cl)
-;;
-
 let rec length (l : 'a circlist) : int = 
-  let rec getLength l2 acc = match l2 with 
-    | None -> 0
-    | Some cl -> if (cl == cl.n) then acc
-                   else getLength (next l2) (acc+1)
+  let rec getLength l2 l3 acc = match (l2, l3) with 
+    | None, None -> 0
+    | Some cl, Some cl2 -> if (cl.n == cl2) then acc
+    else (getLength (next l2) (l3) (acc+1))
   in
-  getLength (cons'l) 0
+  getLength l l 1
 ;;
-                          
-                
-
 
 (* Q3.3: Write a function that produces an immutable list from a circular list *)
 let to_list (l : 'a circlist)  : 'a list = 
-  let rec listify cl1 ll = match cl1 with
-    | None -> []
-    | Some cl -> if (cl == cl.n) then  (cl.n.p <- cl.p; cl.p.n <- cl.n; ll)
-                 else listify (next cl1) (ll@[cl.data])
+  let rec listify cl1 cl2 ll = match (cl1,cl2) with
+    | None, None -> []
+    | Some cl , Some cNode -> if (cl.n == cNode) then  (ll@[cl.data])
+                 else (listify (next cl1) (cl2) (ll@[cl.data]))
   in
-  listify (cons' l) []
+  listify  l l []
 ;;
 
 
@@ -225,11 +213,12 @@ let to_list (l : 'a circlist)  : 'a list =
 let rec from_list : 'a list -> 'a circlist = function
   | [] -> empty
   | x::xs -> cons x (from_list xs)
-
+(*
 (* Q3.4: Write a function that reverses all the directions of the list *)
 let rev (l : 'a circlist) : 'a circlist = 
-   let t = to_list l in
-   from_list t
+   let rec revs l1 l2 = match (l1,l2) with
+     | None,None -> None
+     | Some cl, Some cl2 -> *)
 ;;
  (*let rec reversal l n acc = match l with
     | None -> None
