@@ -28,12 +28,15 @@ let evens max = unfold (fun x -> if (x = 0) then (x,x + 2) else (x, x + 2)) (fun
 
 
 (* Q1.2: Return the Fibonacci sequence up-to max *)
+(*
 let binetPos = (1.0 +. sqrt(5.0)) /. 2.0;;
 let binetNeg = (1.0 -. sqrt (5.0)) /. 2.0;;
 let computeBinet x = int_of_float ((binetPos ** (float_of_int x) -. binetNeg ** (float_of_int x)) /. sqrt(5.0));;
 
-let fib max = unfold (fun x -> computeBinet x , x + 1) (fun s -> computeBinet s >= max) 1;;
-let fib' max = unfold (fun (x,y) -> if (x = 0) then (1),(y,1)
+let fib' max = unfold (fun x -> computeBinet x , x + 1) (fun s -> computeBinet s >= max) 1;;
+*)
+
+let fib max = unfold (fun (x,y) -> if (x = 0) then (1),(y,1)
                                                else (x + y), (y, x + y)) (fun (s,k) -> (s+k) >= max) (0,0)
 (* Q1.3: Return the list of rows of the Pascal triangle that are shorter than max *)
 let rec fact x = 
@@ -177,14 +180,9 @@ let cons (x : 'a)  (xs : 'a circlist) : 'a circlist = match xs with
   | None -> let xs = singl x in xs 
   | Some cl -> let addedCell = {p = cl.p; data = x; n = cl} 
                 in
-                (*cl.p.p <- addedCell; cl.p <- addedCell; Some cl*)
                 if (cl.n == cl) then (cl.n <- addedCell ; cl.p <- addedCell; Some cl)
                 else 
                         (cl.p.n <- addedCell; cl.p <- addedCell; Some cl)
-                        (*match (prev xs) with 
-                | None -> None 
-                | Some pl -> (pl.n <- addedCell; cl.p <- addedCell ; Some cl)
-*)
 ;;
 
 
@@ -213,22 +211,16 @@ let to_list (l : 'a circlist)  : 'a list =
 let rec from_list : 'a list -> 'a circlist = function
   | [] -> empty
   | x::xs -> cons x (from_list xs)
-(*
+
 (* Q3.4: Write a function that reverses all the directions of the list *)
 let rev (l : 'a circlist) : 'a circlist = 
-   let rec revs l1 l2 = match (l1,l2) with
-     | None,None -> None
-     | Some cl, Some cl2 -> *)
-;;
- (*let rec reversal l n acc = match l with
-    | None -> None
-    | Some cl -> if (cl.n.n == cl.n.p && acc = 0) then (cl.p <- cl.n; cl.n.n <- cl; Printf.printf "Branch 1 ";reversal (next l) (n + 1) (acc + 2))
-                   else if ( acc >= 1 && acc < n) then (cl.n.n <- cl;Printf.printf "Branch 2 " ;reversal (prev l) n (acc + 1))
-                   else if ( acc = n) then (Some cl)
-                   else (cl.p <- cl.n ; Printf.printf "Branch 3 ";reversal (next l) (n + 1) acc)
+  let rec revs l1 l2 acc = match (l1,l2) with
+    | None,None -> None
+    | Some cl, Some cl2 -> if (not(cl.p == cl2.n) ) then (cl.n <- cl2.p; cl.p <- cl2.n; revs (prev l1)(next l2) (acc +1 ))
+                                else (next l1)
   in
-  reversal l 1 0
-;;*)
+  revs l l 0
+;;
 
 (*
 (* (Extra credit) OPTIONAL: Write the map function as applied to lists *)
