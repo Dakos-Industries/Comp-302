@@ -224,8 +224,11 @@ let rev (l : 'a circlist) : 'a circlist =
 
 (*
 (* (Extra credit) OPTIONAL: Write the map function as applied to lists *)
-let map (f : 'a -> 'b) : 'a circlist -> ' b circlist = assert false
-
+let map (f : 'a -> 'b) : 'a circlist -> ' b circlist = 
+   let rec t acc = function
+    | None -> empty
+    | Some cl -> cl.data = if (acc == (length 
+*)
 (* Some possibly useful functions (Wink, wink!) *)
 
 (* A function that returns the Greatest Common Denominator of two numbers *)
@@ -239,9 +242,48 @@ let lcm (m : int) (n : int) : int  =
   | 0, _ | _, 0 -> 0
   | m, n -> abs (m * n) / (gcd m n)
 
-
 (* (Extra credit) OPTIONAL A function that compares two lists ignoring the rotation *)
-let eq (l1 : 'a circlist) (l2 : 'a circlist) : bool = assert false
+let rec checkDiv l1 l2 acc = match (l1,l2) with 
+  | None, None -> false
+  | (Some cl1), (Some cl2) -> if (acc < (gcd (length l1) (length l2) )) then if (cl1.data = cl2.data) 
+                                                           then checkDiv (next l1) (next l2) (acc +1) 
+                                                           else false 
+                                                      else true
+;;
+
+let rec positionHead (l : 'a circlist) (ls : 'a circlist) : 'a circlist =
+  let rec moveHead (l1 : 'a circlist) (l2 : 'a circlist) acc = 
+         match (l1, l2) with
+         | None, None -> (None : 'a circlist)
+         | (Some cl1), (Some cl2) ->if (acc = (length l2)) then ( None : 'a circlist)
+                      else if (cl1.data = cl2.data && (checkDiv l1 l2 0)) then (l2)
+                      else moveHead l1 (next l2) (acc + 1)
+  in
+  moveHead l ls 0
+;;
+
+let rec isEqual (l1 : 'a circlist) (l2 : 'a circlist) : bool =
+    let rec compare l ls  acc = match (l,ls) with 
+      | None, None -> false
+      | None, _ -> false
+      | _, None -> false
+      | (Some cl1), (Some cl2) -> if ( acc = (length ls)) then true
+      else if (cl1.data = cl2.data) then (compare (next l) (next ls) (acc + 1))
+                                  else false
+    in
+    compare l1 (positionHead l1 l2) 0
+;;
+
+
+let eq (l1 : 'a circlist) (l2 : 'a circlist) : bool = 
+  if ( (length l1) = 0 && (length l2) = 0) then false
+  else 
+    if ((length l2) > (length l1)) then (isEqual l1 l2)
+    else (isEqual l2 l1)
+;;
+
+eq (from_list [1;2;2;1;2;2]) (from_list [2;1;2;2;1;2;2;1;2]);;
+eq (from_list [1;2;2;2;1;2;2;2]) (from_list [2;2;1;2;2;2;1;2;2;2;1;2]);;
 
 (* Some examples *)
 (*
@@ -262,5 +304,4 @@ let l9 = from_list [3 ; 1 ; 2]  (* eq l8 l9 = true *)
 
 let l10 = from_list [1 ; 2 ; 3]
 let l11 = from_list [3 ; 2 ; 1]  (* eq l10 l11 = false *)
-*) 
 *)
