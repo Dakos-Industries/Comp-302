@@ -199,7 +199,8 @@ let rec length (l : 'a circlist) : int =
 (* Q3.3: Write a function that produces an immutable list from a circular list *)
 let to_list (l : 'a circlist)  : 'a list = 
   let rec listify cl1 cl2 ll = match (cl1,cl2) with
-    | None, None -> []
+    | _, None -> []
+    | None, _ -> []
     | Some cl , Some cNode -> if (cl.n == cNode) then  (ll@[cl.data])
                  else (listify (next cl1) (cl2) (ll@[cl.data]))
   in
@@ -222,13 +223,19 @@ let rev (l : 'a circlist) : 'a circlist =
   revs l l 0
 ;;
 
-(*
+
 (* (Extra credit) OPTIONAL: Write the map function as applied to lists *)
-let map (f : 'a -> 'b) : 'a circlist -> ' b circlist = 
-   let rec t acc = function
-    | None -> empty
-    | Some cl -> cl.data = if (acc == (length 
-*)
+let rec map' (f: 'a -> 'b) (l : 'a circlist) (l2 : 'a circlist) acc = 
+  match l with
+  | None -> l2
+  | Some cl -> if (acc < (length l)) then (map' f (next l) ( cons (f cl.data) l2) (acc +1)) 
+               else l2
+;;
+
+let map (f : 'a -> 'b) : 'a circlist -> ' b circlist = function
+    | (cl : 'a circlist) -> let (returnedList : 'a circlist) = None in map' f cl returnedList 0
+;;
+
 (* Some possibly useful functions (Wink, wink!) *)
 
 (* A function that returns the Greatest Common Denominator of two numbers *)
