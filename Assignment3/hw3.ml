@@ -24,7 +24,7 @@ let rec unfold (f: 'seed -> ('a * 'seed)) (stop : 'b -> bool) (b : 'seed) : 'a l
 let nats max = unfold (fun b -> b, b + 1) (fun x -> x > max) 0
 
 (* Q1.1: Return the even numbers up-to max *)
-let evens max = unfold (fun x -> if (x = 0) then (x,x + 2) else (x, x + 2)) (fun s -> s >= max) 0;;
+let evens max = unfold (fun x -> if (x = 0) then (x,x + 2) else (x, x + 2)) (fun s -> s > max) 0;;
 
 
 (* Q1.2: Return the Fibonacci sequence up-to max *)
@@ -37,7 +37,7 @@ let fib' max = unfold (fun x -> computeBinet x , x + 1) (fun s -> computeBinet s
 *)
 
 let fib max = unfold (fun (x,y) -> if (x = 0) then (1),(y,1)
-                                               else (x + y), (y, x + y)) (fun (s,k) -> (s+k) >= max) (0,0)
+                                               else (x + y), (y, x + y)) (fun (s,k) -> (s+k) > max) (0,0)
 (* Q1.3: Return the list of rows of the Pascal triangle that are shorter than max *)
 let rec fact x = 
   let rec compute y acc rollingTotal = 
@@ -51,15 +51,16 @@ let rec fact x =
 
 let binThm n k = (fact n) / (fact(n - k) * fact k);;
 
-let rec createRow x = 
-  let rec row n l acc = 
+let rec createRow x max= 
+  let rec row n l acc =
     if (acc <= n) then row n (l@[binThm n acc]) (acc + 1)
     else
      l
   in
+  if (max = 1) then [] else 
   row (x) [] 0;;
 
-let pascal max = unfold (fun x -> createRow x, x + 1) (fun s -> s > max) 0;;
+let pascal max = unfold (fun x -> createRow x max, x + 1) (fun s -> s >= (max-1)) 0;;
 
 let rec zip (l1 : 'a list) (l2 : 'b list) :  ('a * 'b) list =
 match l1, l2 with
@@ -288,10 +289,10 @@ let eq (l1 : 'a circlist) (l2 : 'a circlist) : bool =
     if ((length l2) > (length l1)) then (isEqual l1 l2)
     else (isEqual l2 l1)
 ;;
-
+(*
 eq (from_list [1;2;2;1;2;2]) (from_list [2;1;2;2;1;2;2;1;2]);;
 eq (from_list [1;2;2;2;1;2;2;2]) (from_list [2;2;1;2;2;2;1;2;2;2;1;2]);;
-
+*)
 (* Some examples *)
 (*
 let ex = cons 12 (cons 43 (cons 34 (singl 3)))
