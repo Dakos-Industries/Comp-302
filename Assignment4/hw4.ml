@@ -21,18 +21,20 @@ let rec find_e (p : 'a -> bool) (t : 'a rose_tree) : 'a = match t with (* Functi
 let find (p : 'a -> bool)  (t : 'a rose_tree) : 'a option = (* call find_e and handle the exceptions *)
   try Some (find_e p t) with BackTrack -> None
 
-(*
+
 (* Find with failure continuations *)
 
-let rec find_k (p : 'a -> bool) (t : 'a rose_tree) (k : unit -> 'a option) : 'a option =
-  assert false
+let rec find_k (p : 'a -> bool) (t : 'a rose_tree) (k : unit -> 'a option) : 'a option = match t with
+  | Node (x,[]) -> if (p x) then (Some x) else k ()
+  | Node (x,h::t') -> if (p x) then (Some x) else (find_k p h (fun () -> find_k p (Node (x,t')) k))
 
 
 (* Q1.2: write this function and it helper functions *)
-let find' (p : 'a -> bool)  (t : 'a rose_tree) : 'a option = assert false (*  call find_k with the appropriate inital continuation *)
+let find' (p : 'a -> bool)  (t : 'a rose_tree) : 'a option = (*  call find_k with the appropriate inital continuation *)
+  find_k p t (fun () -> None)
 
 (* Find all with continuations *)
-
+(*
 let rec find_all_k  (p : 'a -> bool) (t : 'a rose_tree) (k : 'a list -> 'b) : 'b =
   assert false
 
