@@ -57,7 +57,7 @@ let example = Node (7, [ Node (1, [])
                          ])
 
 let is_big x =  x > 10
-(*
+
 
 (* Q2 : Rational Numbers Two Ways *)
 
@@ -103,10 +103,25 @@ end
 
 (* Q2.1: Implement the Arith module using rational numbers (t = fraction) *)
 
-(* module FractionArith : Arith = *)
-(* struct *)
-(*   ... *)
-(* end *)
+module FractionArith : Arith = 
+struct 
+  type t = fraction;;
+  let epsilon = ((1,1000000) : fraction);;
+  let from_fraction (num,den) = ((num,den) : fraction);;
+
+  let plus ((x,y) : fraction) ((x2,y2): fraction) = (((x * y2) + (x2 * y), y*y2):fraction);;
+  let minus ((x,y) : fraction) ((x2,y2): fraction) = (((x * y2) - (x2 * y), y*y2):fraction);;
+  let prod ((x,y) : fraction) ((x2,y2): fraction) = (((x * y), y*y2):fraction);;
+  let div ((x,y) : fraction) ((x2,y2): fraction) = (((x * y2), x2*y):fraction);;
+  let abs ((x,y) : fraction) = ((abs x, abs y):fraction);;
+  let lt ((x,y) : fraction) ((x2,y2): fraction) = (x * y2) < (x2 * y);;
+  let le ((x,y) : fraction) ((x2,y2): fraction) = (x * y2) <= (x2 * y);;
+  let gt ((x,y) : fraction) ((x2,y2): fraction) = (x * y2) > (x2 * y);;
+  let ge ((x,y) : fraction) ((x2,y2): fraction) = (x * y2) >= (x2 * y);;
+  let eq ((x,y) : fraction) ((x2,y2): fraction) = (x * y2) = (x2 * y);;
+  let to_string ((x,y) : fraction) = string_of_int x ^ "/" ^ string_of_int y;;
+end
+
 
 module type NewtonSolver =
   sig
@@ -117,19 +132,28 @@ module type NewtonSolver =
 
 (* Q2.2: Implement a function that approximates the square root using  the Newton-Raphson method *)
 
-(* module Newton (A : Arith) : (NewtonSolver with type t = A.t) = *)
-(*   struct *)
-(*     ... *)
-(*   end *)
+module Newton (A : Arith) : (NewtonSolver with type t = A.t) = 
+struct 
+  type t = A.t;;      
+  let rec findroot x acc = 
+    let rec compute a x acc = 
+      let next = A.div(A.plus (A.div a x) x) (A.from_fraction (2,1)) in
+        if (A.le(A.abs(A.minus next x)) acc) then x else (compute a next acc)
+    in
+    compute x x acc;;
+  let square_root t' = findroot t' A.epsilon;;
+end 
+
+
 
 (* Examples *)
 
-(* module FloatNewton = Newton (FloatArith) *)
-(* module RationalNewton = Newton (FractionArith) *)
+module FloatNewton = Newton (FloatArith) 
+module RationalNewton = Newton (FractionArith) 
 
-(* let sqrt2 = FloatNewton.square_root (FloatArith.from_fraction (2, 1)) *)
-(* let sqrt2_r = RationalNewton.square_root (FractionArith.from_fraction (2, 1)) *)
-
+let sqrt2 = FloatNewton.square_root (FloatArith.from_fraction (2, 1)) 
+let sqrt2_r = RationalNewton.square_root (FractionArith.from_fraction (2, 1)) 
+(*
 (* Q3 : Real Real Numbers, for Real! *)
 
 type 'a stream = { head : 'a  ; tail : unit -> 'a stream}
