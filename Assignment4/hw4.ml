@@ -108,11 +108,20 @@ struct
   type t = fraction;;
   let epsilon = ((1,1000000) : fraction);;
   let from_fraction (num,den) = ((num,den) : fraction);;
+  
+  (* A function that returns the Greatest Common Denominator of two numbers *)
+  let rec gcd (u : int) (v : int) : int =
+    if v <> 0 then (gcd v (u mod v))
+    else (abs u)
 
-  let plus ((x,y) : fraction) ((x2,y2): fraction) = (((x * y2) + (x2 * y), y*y2):fraction);;
-  let minus ((x,y) : fraction) ((x2,y2): fraction) = (((x * y2) - (x2 * y), y*y2):fraction);;
-  let prod ((x,y) : fraction) ((x2,y2): fraction) = (((x * y), y*y2):fraction);;
-  let div ((x,y) : fraction) ((x2,y2): fraction) = (((x * y2), x2*y):fraction);;
+  let plus ((x,y) : fraction) ((x2,y2): fraction) = let n1 = (x * y2) + (x2 * y) and n2 = y*y2 in 
+                                                      let gcd = gcd n1 n2 in ( (n1/gcd,n2/gcd) :fraction);;
+  let minus ((x,y) : fraction) ((x2,y2): fraction) = let n1 =(x * y2) - (x2 * y) and n2 =  y*y2 in
+                                                       let gcd = gcd n1 n2 in ((n1/gcd,n2/gcd):fraction);;
+  let prod ((x,y) : fraction) ((x2,y2): fraction) = let n1 = (x * y) and n2 = ( y*y2) in 
+                                                      let gcd = gcd n1 n2 in ((n1/gcd, n2/gcd):fraction);;
+  let div ((x,y) : fraction) ((x2,y2): fraction) = let n1 = (x * y2) and n2 = (x2*y) in 
+                                                     let gcd = gcd n1 n2 in ((n1/gcd, n2/gcd):fraction);;
   let abs ((x,y) : fraction) = ((abs x, abs y):fraction);;
   let lt ((x,y) : fraction) ((x2,y2): fraction) = (x * y2) < (x2 * y);;
   let le ((x,y) : fraction) ((x2,y2): fraction) = (x * y2) <= (x2 * y);;
@@ -147,12 +156,16 @@ end
 
 
 (* Examples *)
-
+(*
 module FloatNewton = Newton (FloatArith) 
 module RationalNewton = Newton (FractionArith) 
 
-let sqrt2 = FloatNewton.square_root (FloatArith.from_fraction (2, 1)) 
-let sqrt2_r = RationalNewton.square_root (FractionArith.from_fraction (2, 1)) 
+let sqrt2 = FloatNewton.square_root (FloatArith.from_fraction (5, 1)) ;;
+let sqrt2_r = RationalNewton.square_root (FractionArith.from_fraction (5, 1));;
+
+FloatArith.to_string sqrt2;;
+FractionArith.to_string sqrt2_r;;
+*)
 (*
 (* Q3 : Real Real Numbers, for Real! *)
 
