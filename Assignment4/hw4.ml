@@ -34,7 +34,7 @@ let find' (p : 'a -> bool)  (t : 'a rose_tree) : 'a option = (*  call find_k wit
   find_k p t (fun () -> None)
 
 (* Find all with continuations *)
-
+(*
 let rec find_all_k  (p : 'a -> bool) (t : 'a rose_tree) (k : 'a list -> 'b) : 'b =  match t with
   | Node (x,[]) -> if (p x) then (k [x]) else k []
   | Node (x,h::t') -> (if (p x) then
@@ -45,7 +45,7 @@ let rec find_all_k  (p : 'a -> bool) (t : 'a rose_tree) (k : 'a list -> 'b) : 'b
 
 (* Q1.3: write this function and it helper functions *)
 let find_all p t = find_all_k p t (fun l -> l)
-
+*)
 (* An example to use *)
 
 let example = Node (7, [ Node (1, [])
@@ -191,7 +191,7 @@ let rec take n z =
   
 (* Q3.1: implement the function q as explained in the pdf *)
 let rec q z n = if n = 0 then 1 else (if n = 1 then (nth z 1)
-                else ((nth z n) * (q z (n-1)) + (q z (n-2))))
+                else (((nth z n) * (q z (n-1))) + (q z (n-2))))
 ;;
 
 
@@ -199,11 +199,10 @@ let rec q z n = if n = 0 then 1 else (if n = 1 then (nth z 1)
 let rec r z n = 
   let rec compute z n acc currentN priorQ = 
     if (n < currentN || nth z currentN = 0) then acc 
-    else (if currentN = 0 then (compute z n (float_of_int z.head) (currentN + 1) (z.head))
-          else ( let currq = (q z currentN) in compute z n (acc +. ((-1.0) ** float_of_int(currentN - 1)) /. 
-                                                           (float_of_int(priorQ * currq))) (currentN + 1) currq))
+    else ( let currq = (q z currentN) in compute z n (acc +. ((-1.0) ** float_of_int(currentN - 1)) /. 
+                                                           (float_of_int(priorQ * currq))) (currentN + 1) currq)
   in
-  compute z n 0.0 0 0
+  compute z n (float_of_int z.head) 1 1
 ;;
     
 
@@ -214,15 +213,17 @@ let error' z n = abs_float((r z n) -. (r z (n-1)));;
 
 (* Q3.4: implement a function that computes a rational approximation of a real number *)
 let rat_of_real z approx = 
-  let rec compute_rat n = let current = (r z n) in (if (nth z n = 0) then (current) else(
+  let rec compute_rat n = let current = (r z n) in (if ((nth z n) = 0) then (current) else(
                                                        if( (error z n) < approx) 
                                                        then (current) else (compute_rat (n+1))))
   in
-  compute_rat 0
+  compute_rat 1
 ;;
 
 
 let real_of_int n = { head = n ; tail = fun () -> constant 0}
+
+
 
 (* Q3.5: implement a function that computes the real representation of a rational number   *)
 let rec real_of_rat r = {head = int_of_float(floor r); tail = fun () -> if ((r -. (floor r)) < epsilon_float) then constant 0
