@@ -118,7 +118,7 @@ struct
                                                       let gcd = gcd n1 n2 in ( (n1/gcd,n2/gcd) :fraction);;
   let minus ((x,y) : fraction) ((x2,y2): fraction) = let n1 =(x * y2) - (x2 * y) and n2 =  y*y2 in
                                                        let gcd = gcd n1 n2 in ((n1/gcd,n2/gcd):fraction);;
-  let prod ((x,y) : fraction) ((x2,y2): fraction) = let n1 = (x * y) and n2 = ( y*y2) in 
+  let prod ((x,y) : fraction) ((x2,y2): fraction) = let n1 = (x * x2) and n2 = ( y*y2) in 
                                                       let gcd = gcd n1 n2 in ((n1/gcd, n2/gcd):fraction);;
   let div ((x,y) : fraction) ((x2,y2): fraction) = let n1 = (x * y2) and n2 = (x2*y) in 
                                                      let gcd = gcd n1 n2 in ((n1/gcd, n2/gcd):fraction);;
@@ -203,7 +203,7 @@ let rec r z n =
           else ( let currq = (q z currentN) in compute z n (acc +. ((-1.0) ** float_of_int(currentN - 1)) /. 
                                                            (float_of_int(priorQ * currq))) (currentN + 1) currq))
   in
-  compute z n 0.0 0 1
+  compute z n 0.0 0 0
 ;;
     
 
@@ -213,8 +213,8 @@ let error z n = let currq = (q z n) in (1.0 /. float_of_int(currq *(currq + (q z
 
 (* Q3.4: implement a function that computes a rational approximation of a real number *)
 let rat_of_real z approx = 
-  let rec compute_rat n = let current = (r z n) in (if (nth z n = 0) then (r z (n-1)) else(
-                                                       if( (abs_float((r z (n+1)) -. current)) <= approx) 
+  let rec compute_rat n = let current = (r z n) in (if (nth z n = 0) then (current) else(
+                                                       if( (abs_float((r z (n+1)) -. current)) < approx) 
                                                        then (current) else (compute_rat (n+1))))
   in
   compute_rat 0
@@ -222,26 +222,26 @@ let rat_of_real z approx =
 
 
 let real_of_int n = { head = n ; tail = fun () -> constant 0}
-(*
-(* Q3.5: implement a function that computes the real representation of a rational number   *)
-let rec real_of_rat r = assert false
 
-*)
+(* Q3.5: implement a function that computes the real representation of a rational number   *)
+let rec real_of_rat r = {head = int_of_float(floor r); tail = fun () -> if ((r -. float_of_int(int_of_float r)) < epsilon_float) then constant 0
+                                                          else (real_of_rat (1.0 /. (r -. float_of_int(int_of_float r))))}
+
 (* Examples *)
 
 (* Approximations of the  irrational numbers we have *)
 
 (* let sqrt_2_rat = rat_of_real sqrt2 1.e-5 *)
-(* let golden_ratio_rat = rat_of_real golden_ratio 1.e-5 *)
+let golden_ratio_rat = rat_of_real golden_ratio 1.e-5 
 
 (* To test the representation of rationals we can try this *)
-(* let to_real_and_back n = rat_of_real (real_of_rat n) 0.0001 *)
+let to_real_and_back n = rat_of_real (real_of_rat n) 0.0001 
 
 (* e1 should be very close to 10 (it is exactly 10 in the model solution) *)
-(* let e1 = to_real_and_back 10.0 *)
+let e1 = to_real_and_back 10.0 
 
 (* this is the float approximation of pi, not the real number pi *)
-(* let not_pi = 2. *. acos 0. *)
+let not_pi = 2. *. acos 0. 
 
 (* This should share the same 4 decimals with not_pi *)
-(* let not_pi' = to_real_and_back not_pi *)
+let not_pi' = to_real_and_back not_pi 
