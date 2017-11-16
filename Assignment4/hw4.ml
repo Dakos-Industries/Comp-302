@@ -166,7 +166,7 @@ let sqrt2_r = RationalNewton.square_root (FractionArith.from_fraction (5, 1));;
 FloatArith.to_string sqrt2;;
 FractionArith.to_string sqrt2_r;;
 *)
-(*
+
 (* Q3 : Real Real Numbers, for Real! *)
 
 type 'a stream = { head : 'a  ; tail : unit -> 'a stream}
@@ -188,20 +188,41 @@ let rec take n z =
   if n = 1 then [z.head]
   else z.head::(take (n-1) (z.tail()))
 
+  
 (* Q3.1: implement the function q as explained in the pdf *)
-let rec q z n = assert false
+let rec q z n = if n = 0 then 1 else (if n = 1 then (nth z 1)
+                else ((nth z n) * (q z (n-1)) + (q z (n-2))))
+;;
+
 
 (* Q3.2: implement the function r as in the notes *)
-let rec r z n = assert false
+let rec r z n = 
+  let rec compute z n acc currentN priorQ = 
+    if (n < currentN || nth z currentN = 0) then acc 
+    else (if currentN = 0 then (compute z n (float_of_int z.head) (currentN + 1) (z.head))
+          else ( let currq = (q z currentN) in compute z n (acc +. ((-1.0) ** float_of_int(currentN - 1)) /. 
+                                                           (float_of_int(priorQ * currq))) (currentN + 1) currq))
+  in
+  compute z n 0.0 0 1
+;;
+    
 
 (* Q3.3: implement the error function *)
-let error z n = assert false
+let error z n = let currq = (q z n) in (1.0 /. float_of_int(currq *(currq + (q z (n-1)))))
+;;
 
 (* Q3.4: implement a function that computes a rational approximation of a real number *)
-let rat_of_real z approx = assert false
+let rat_of_real z approx = 
+  let rec compute_rat n = let current = (r z n) in (if (nth z n = 0) then (r z (n-1)) else(
+                                                       if( (abs_float((r z (n+1)) -. current)) <= approx) 
+                                                       then (current) else (compute_rat (n+1))))
+  in
+  compute_rat 0
+;;
+
 
 let real_of_int n = { head = n ; tail = fun () -> constant 0}
-
+(*
 (* Q3.5: implement a function that computes the real representation of a rational number   *)
 let rec real_of_rat r = assert false
 
