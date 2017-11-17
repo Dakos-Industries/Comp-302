@@ -34,18 +34,23 @@ let find' (p : 'a -> bool)  (t : 'a rose_tree) : 'a option = (*  call find_k wit
   find_k p t (fun () -> None)
 
 (* Find all with continuations *)
-(*
-let rec find_all_k  (p : 'a -> bool) (t : 'a rose_tree) (k : 'a list -> 'b) : 'b =  match t with
+
+let rec find_all_k  (p : 'a -> bool) (t : 'a rose_tree) (k : 'a list -> 'b) : 'b =  
+  let rec nextNode pr (tl : 'a rose_tree list) sc = match tl with
+    | [] -> sc []
+    | h::t -> find_all_k pr h (fun l -> l@(nextNode pr t sc))
+  in
+  match t with
   | Node (x,[]) -> if (p x) then (k [x]) else k []
   | Node (x,h::t') -> (if (p x) then
-                        find_all_k p h (fun eh -> eh@x::(find_all_k p t' k))
+                        find_all_k p h (fun l -> l@x::(nextNode p t' k))
                       else 
-                        find_all_k p h (fun eh -> eh@find_all_k p t' k)
+                        find_all_k p h (fun l -> l@nextNode p t' k)
   );;
 
 (* Q1.3: write this function and it helper functions *)
 let find_all p t = find_all_k p t (fun l -> l)
-*)
+
 (* An example to use *)
 
 let example = Node (7, [ Node (1, [])
