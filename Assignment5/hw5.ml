@@ -105,7 +105,16 @@ struct
              Let(Val(e1', y'), subst s e2')
          else
            Let(Val(e1', y), subst s e2)
-    | Let (Match (e1, x, y), e2) -> assert false
+    | Let (Match (e1, x, y), e2) -> 
+        let e1' = subst s e1 in
+        let xMember = member x (freeVars e1') in
+        let yMember = member y (freeVars e1') in
+        (match (xMember, yMember) with 
+          | true,true -> let x' = freshVar x and y' = freshVar y in let e2' = rename (x', x) e2 in let e2'' = rename (y', y) e2' in Let (Match(e1',x',y'), subst s e2'')
+          | true,false -> let x' = freshVar x in let e2' = rename (x', x) e2 in Let (Match (e1',x',y), subst s e2')
+          | false, true -> let y' = freshVar y in let e2' = rename (y', y) e2 in Let (Match (e1',x,y'), subst s e2')
+          | false, false -> Let (Match(e1',x,y), subst s e2)
+        )
     | Pair (e1, e2) -> Pair (subst s e1, subst s e2)
 
   and rename (x', x) e = subst (Var x', x) e
@@ -174,8 +183,13 @@ module Types =
       | E.Let (E.Val (e1, x), e2) ->
          let t = infer g e1 in
          infer ((x, t)::g) e2
-      | E.Pair (e1, e2) -> assert false
-      | E.Let (E.Match (e1, x, y), e2) -> assert false
+      | E.Pair (e1, e2) -> let t1 = infer g e1 in 
+                           let t2 = infer g e2 in
+                           Prod(t1,t2)
+      | E.Let (E.Match (e1, x, y), e2) -> let t = infer g e1 in
+                                          match t with
+                                          | Prod (t1, t2) -> infer ((x, t1)::(y,t2)::g) e2
+                                          | _ -> fail("Error: e1 must be a Pair")
     end
 
 module Eval =
@@ -211,8 +225,10 @@ module Eval =
          | Some v -> v)
       | Let (Val (e1, x), e2) -> eval (subst (eval e1, x) e2)
       | Var _ -> raise (Stuck "Bug : we only evaluate closed terms")    (* Variables would not occur in the evaluation of closed terms *)
-      | Pair (e1, e2) -> assert false
-      | Let (Match (e1, x, y), e2) -> assert false
+      | Pair (e1, e2) -> Pair (eval e1, eval e2)
+      | Let (Match (e1, x, y), e2) -> match e1 with
+                                        | Pair (x',y')-> let v = (subst (eval x', x) e2) in let k = (subst (eval y', y) v) in eval k
+                                        | _ -> raise (Stuck "e1 Must be a pair")
   end
 
 
@@ -234,6 +250,7 @@ let e4 = E.Let (E.Val (E.Int 3, "x"),
 (* Question 2 : There’s more than one way to do it  *)
 
 (* Q2.1 Extend on the definition of the free variables function with fst and snd. *)
+
 (* Q2.2 Extend the definition of subst function with fst and snd. *)
 
 
