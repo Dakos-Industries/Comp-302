@@ -61,6 +61,8 @@ struct
   | Var y -> [y]
   | Int n -> []
   | Bool b -> []
+  | Fst e' -> freeVars e'
+  | Snd e' -> freeVars e'
   | If(e, e1, e2) ->
     union (freeVars e, union (freeVars e1, freeVars e2))
   | Primop (po, args) ->
@@ -89,6 +91,8 @@ struct
        else Var y
     | Int n  -> Int n
     | Bool b -> Bool b
+    | Fst e -> subst s e 
+    | Snd e -> subst s e
     | Primop(po, args) ->
        Primop(po, List.map (subst s) args)
     | If(e, e1, e2) ->
@@ -260,7 +264,21 @@ module type Optimization =
   end
 
 (* Q3.1: implement dead code elimintion *)
-(* module DeadCode : Optimization = ... *)
+ module DeadCode : Optimization = 
+   struct
+   module E = Exp
+
+   let rec optimize e = match e with
+      | E.Int x -> E.Int x
+      | E.Bool x -> E.Bool x
+      | E.If (e, e1, e2) -> E.If(e,e1,e2)
+      | E.Primop (po, args) ->E.Primop (po, args)
+      | E.Var x -> E.Var x
+      | E.Let (E.Val (e1, x), e2) -> if (E.member x (E.freeVars e2)) then e else optimize e2
+      | E.Pair (e1, e2) -> E.Pair(e1,e2)
+      | E.Let (E.Match (e1, x, y), e2) ->if (E.member x (E.freeVars e2)) or (E.member y (E.freeVars e2)) then e else optimize e2
+
+   end
 
 (* Q3.2: implement the elimination of pattern matching let *)
 (* module RemoveLetMatch : Optimization = ... *)
@@ -269,6 +287,26 @@ module Compose (M1 : Optimization) (M2 : Optimization) : Optimization =
   struct
     let optimize e = M1.optimize (M2.optimize e)
   end
+
+ module RemoveLetMatch : Optimization =
+   struct 
+     open Exp
+
+     let rec optimize e = match e with
+      | Int x -> Int x
+      | Bool x -> Bool x
+      | If (e, e1, e2) -> If(e,e1,e2)
+      | Primop (po, args) ->Primop (po, args)
+      | Var x -> Var x
+      | Let (Val (e1, x), e2) -> e
+      | Pair (e1, e2) -> Pair(e1,e2)
+      | Let (Match (e1, x, y), e2) -> let z = freshVar x in 
+                                        match e1 with
+                                        | Pair (ex1,ex2) -> let k = subst ((Fst ex1), x) e2 in let finalE = subst ((Snd ex2), y) k in Let (Val (e1,z), finalE)
+                                        | _ -> e
+
+
+   end
 
 (* To test one after the other use this pipeline *)
 (* module Pipeline = Compose (DeadCode) (RemoveLetMatch) *)
@@ -295,6 +333,6 @@ let plus e1 e2 =
 let e5 = let open Exp in Let (Match (Pair (Int 5, Int 7), "x", "y"), Let (Val (Int 2, "z"), plus (Var "x") (plus (Var "y") (Var "z"))))
 let e6 = let open Exp in Let (Match (Pair (Int 5, Int 7), "x", "y"), Let (Val (Int 2, "z"), plus (Var "y") (Var "z")))
 let e7 = let open Exp in Let (Match (Pair (Int 5, Int 7), "x", "y"), Let (Val (Int 2, "z"), plus (Var "x") (Var "y")))
-
+let e9 = let open Exp in Let (Match (Pair (Int 5, Int 7), "x", "y"), Int 4)
 
 let e8 = let open Exp in Let (Val (Int 3, "z"), Let (Val (Int 7, "x"), Let (Val (Var "x", "y"), Var "z")))
