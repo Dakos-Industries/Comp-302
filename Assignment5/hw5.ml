@@ -277,6 +277,8 @@ module type Optimization =
       | E.Let (E.Val (e1, x), e2) -> if (E.member x (E.freeVars e2)) then e else optimize e2
       | E.Pair (e1, e2) -> E.Pair(e1,e2)
       | E.Let (E.Match (e1, x, y), e2) ->if (E.member x (E.freeVars e2)) or (E.member y (E.freeVars e2)) then e else optimize e2
+      | E.Fst e1 -> optimize e1
+      | E.Snd e1 -> optimize e1
 
    end
 
@@ -304,7 +306,6 @@ module Compose (M1 : Optimization) (M2 : Optimization) : Optimization =
                                         match e1 with
                                         | Pair (ex1,ex2) -> let k = subst ((Fst ex1), x) e2 in let finalE = subst ((Snd ex2), y) k in Let (Val (e1,z), finalE)
                                         | _ -> e
-
 
    end
 
