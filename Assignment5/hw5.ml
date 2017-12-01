@@ -1,3 +1,8 @@
+(* Author: Spiros Mavroidakos
+ * Student Id: 260689391
+ *
+ *)
+
 module Exp =
 struct
   type name   = string
