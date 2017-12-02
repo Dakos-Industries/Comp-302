@@ -66,14 +66,15 @@ struct
   | Var y -> [y]
   | Int n -> []
   | Bool b -> []
-  | Fst e' -> freeVars e'
-  | Snd e' -> freeVars e'
-  | If(e, e1, e2) ->
-    union (freeVars e, union (freeVars e1, freeVars e2))
-  | Primop (po, args) ->
-    List.fold_right (fun e1 fv -> union (freeVars e1, fv)) args []
-  | Let (Val (e1, x), e2) ->
-      union (freeVars e1, delete ([x], freeVars e2))
+  | Fst e' -> (match e' with
+                | Pair (e1,e2) -> freeVars e1
+                | _ -> freeVars e')
+  | Snd e' -> (match e' with 
+                | Pair (e1,e2) -> freeVars e2
+                | _ -> freeVars e')
+  | If(e, e1, e2) -> union (freeVars e, union (freeVars e1, freeVars e2))
+  | Primop (po, args) -> List.fold_right (fun e1 fv -> union (freeVars e1, fv)) args []
+  | Let (Val (e1, x), e2) -> union (freeVars e1, delete ([x], freeVars e2))
   | Pair (e1, e2) -> union (freeVars e1, freeVars e2)
   | Let (Match (e1, x, y), e2) -> union (freeVars e1, delete([x], delete ([y], freeVars e2)))
 
@@ -96,12 +97,14 @@ struct
        else Var y
     | Int n  -> Int n
     | Bool b -> Bool b
-    | Fst e -> subst s e 
-    | Snd e -> subst s e
-    | Primop(po, args) ->
-       Primop(po, List.map (subst s) args)
-    | If(e, e1, e2) ->
-       If(subst s e, subst s e1, subst s e2)
+    | Fst e -> (match e with
+                 | Pair (e1,e2) -> subst s e1
+                 | _ -> Fst (subst s e))
+    | Snd e -> (match e with 
+                 | Pair (e1,e2) -> subst s e2
+                 | _ -> Snd (subst s e))
+    | Primop(po, args) -> Primop(po, List.map (subst s) args)
+    | If(e, e1, e2) ->If(subst s e, subst s e1, subst s e2)
     | Let (Val(e1,y), e2) ->
        let e1' = subst s e1 in
        if x = y then
@@ -198,7 +201,7 @@ module Types =
       | E.Let (E.Match (e1, x, y), e2) -> let t = infer g e1 in
                                           match t with
                                           | Prod (t1, t2) -> infer ((x, t1)::(y,t2)::g) e2
-                                          | _ -> fail("Error: e1 must be a Pair")
+                                          | _ -> fail("Error: Pair Expected in Match")
     end
 
 module Eval =
@@ -237,7 +240,7 @@ module Eval =
       | Pair (e1, e2) -> Pair (eval e1, eval e2)
       | Let (Match (e1, x, y), e2) -> match e1 with
                                         | Pair (x',y')-> let v = (subst (eval x', x) e2) in let k = (subst (eval y', y) v) in eval k
-                                        | _ -> raise (Stuck "e1 Must be a pair")
+                                        | _ -> raise (Stuck "Match cannot be evaluated. Pair expected.")
   end
 
 
@@ -276,14 +279,14 @@ module type Optimization =
    let rec optimize e = match e with
       | E.Int x -> E.Int x
       | E.Bool x -> E.Bool x
-      | E.If (e, e1, e2) -> E.If(e,e1,e2)
-      | E.Primop (po, args) ->E.Primop (po, args)
+      | E.If (e, e1, e2) -> E.If(optimize e, optimize e1, optimize e2)
+      | E.Primop (po, args) ->E.Primop (po, List.map optimize args)
       | E.Var x -> E.Var x
-      | E.Let (E.Val (e1, x), e2) -> if (E.member x (E.freeVars e2)) then e else optimize e2
+      | E.Let (E.Val (e1, x), e2) -> if (E.member x (E.freeVars e2)) then  (E.Let (E.Val(optimize e1,x), optimize e2)) else optimize e2
       | E.Pair (e1, e2) -> E.Pair(e1,e2)
-      | E.Let (E.Match (e1, x, y), e2) ->if (E.member x (E.freeVars e2)) or (E.member y (E.freeVars e2)) then e else optimize e2
-      | E.Fst e1 -> optimize e1
-      | E.Snd e1 -> optimize e1
+      | E.Let (E.Match (e1, x, y), e2) ->if (E.member x (E.freeVars e2)) || (E.member y (E.freeVars e2)) then (E.Let(E.Match (optimize e1,x,y), optimize e2)) else optimize e2
+      | E.Fst e1 -> E.Fst (optimize e1)
+      | E.Snd e1 -> E.Snd (optimize e1)
 
    end
 
@@ -302,11 +305,13 @@ module Compose (M1 : Optimization) (M2 : Optimization) : Optimization =
      let rec optimize e = match e with
       | Int x -> Int x
       | Bool x -> Bool x
-      | If (e, e1, e2) -> If(e,e1,e2)
-      | Primop (po, args) ->Primop (po, args)
+      | Fst e -> Fst(optimize e)
+      | Snd e -> Snd(optimize e)
+      | If (e, e1, e2) -> If(optimize e,optimize e1,optimize e2)
+      | Primop (po, args) ->Primop (po, List.map optimize args)
       | Var x -> Var x
-      | Let (Val (e1, x), e2) -> e
-      | Pair (e1, e2) -> Pair(e1,e2)
+      | Let (Val (e1, x), e2) -> Let(Val(optimize e1,x), optimize e2)
+      | Pair (e1, e2) -> Pair(optimize e1,optimize e2)
       | Let (Match (e1, x, y), e2) -> let z = freshVar x in 
                                         match e1 with
                                         | Pair (ex1,ex2) -> let k = subst ((Fst ex1), x) e2 in let finalE = subst ((Snd ex2), y) k in Let (Val (e1,z), finalE)
